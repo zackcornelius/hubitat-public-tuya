@@ -1472,6 +1472,27 @@ private List<Map> createEvents(DeviceWrapper dw, List<Map> statusList) {
             return [[name: 'carbonDioxide', value: value, unit: 'ppm', descriptionText: "carbon dioxide level is ${value}"]]
         }
 
+        if (status.code in tuyaFunctions.workState) {
+            String value
+            switch (status.value) {
+                case 'charger_free':
+                case 'charger_insert':
+                case 'charger_free_fault':
+                case 'charger_wait':
+                case 'charger_charging':
+                case 'charger_pause':
+                case 'charger_end':
+                case 'charger_fault':
+                    value = status.value
+            }
+            if (value) {
+                if (txtEnable) {
+                    LOG.info "${dw} control is ${value}"
+                }
+                return [[name: 'workState', value: value, descriptionText: "chargerState is ${value}"]]
+            }
+        }
+
         if (status.code in tuyaFunctions.control + tuyaFunctions.workState + tuyaFunctions.situationSet) {
             String value
             switch (status.value) {
@@ -1484,15 +1505,6 @@ private List<Map> createEvents(DeviceWrapper dw, List<Map> statusList) {
                 case 'stop': value = 'unknown'; break
                 case 'fully_open': value = 'open'; break
                 case 'fully_close': value = 'closed'; break
-                case 'charger_free':
-                case 'charger_insert':
-                case 'charger_free_fault':
-                case 'charger_wait':
-                case 'charger_charging':
-                case 'charger_pause':
-                case 'charger_end':
-                case 'charger_fault':
-                    value = status.value
             }
             if (value) {
                 if (txtEnable) {
