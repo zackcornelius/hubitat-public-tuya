@@ -171,7 +171,7 @@ metadata {
         'nightvisionMode': ['nightvision_mode'],
         'omniSensor'     : ['bright_value', 'humidity_value', 'va_humidity', 'bright_sensitivity', 'shock_state', 'inactive_state', 'sensitivity'],
         'pir'            : ['pir'],
-        'power'          : ['Power', 'power', 'power_go', 'switch', 'switch_1', 'switch_2', 'switch_3', 'switch_4', 'switch_5', 'switch_6', 'switch_usb1', 'switch_usb2', 'switch_usb3', 'switch_usb4', 'switch_usb5', 'switch_usb6', 'alarm_switch', 'start'],
+        'power'          : ['Power', 'power', 'power_go', 'switch', 'switch_1', 'switch_2', 'switch_3', 'switch_4', 'switch_5', 'switch_6', 'switch_usb1', 'switch_usb2', 'switch_usb3', 'switch_usb4', 'switch_usb5', 'switch_usb6', 'alarm_switch', 'start', 'power_total'],
         'percentControl' : ['percent_control', 'fan_speed_percent', 'position'],
         'push'           : ['manual_feed'],
         'recordSwitch'   : ['record_switch'],
@@ -184,7 +184,8 @@ metadata {
         'workState'      : ['work_state'],
         'situationSet'   : ['situation_set'],
         'siren'          : ['siren_switch'],
-        'volume'         : ['basic_device_volume']
+        'volume'         : ['basic_device_volume'],
+        'energy'         : ['forward_energy_total']
 ].asImmutable()
 
 // Tuya -> Hubitat attributes mappings
@@ -321,6 +322,8 @@ private static Map mapTuyaCategory(Map d) {
                 return [driver: 'Generic Component Dimmer', devices: switches]
             }
             return [devices: switches]
+        case 'qccdz': // Automotive charger
+            return [driver: 'Generic Component Automotive Charger']
 
             // Security & Sensors
         case 'ms':    // Lock
@@ -367,7 +370,6 @@ private static Map mapTuyaCategory(Map d) {
             ]
         case 'fskg':  // Switch Fan
             return [driver: 'Generic Component Fan Control']
-            // Kitchen Appliances
     }
 
     return [driver: 'Generic Component Switch']
