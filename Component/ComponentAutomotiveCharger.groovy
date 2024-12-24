@@ -80,4 +80,4 @@ void updated() {
 private void logsOff() {
     log.warn "debug logging disabled for ${device}"
     device.updateSetting('logEnable', [value: 'false', type: 'bool'] )
-
+}
