@@ -1484,6 +1484,15 @@ private List<Map> createEvents(DeviceWrapper dw, List<Map> statusList) {
                 case 'stop': value = 'unknown'; break
                 case 'fully_open': value = 'open'; break
                 case 'fully_close': value = 'closed'; break
+                case 'charger_free':
+                case 'charger_insert':
+                case 'charger_free_fault':
+                case 'charger_wait':
+                case 'charger_charging':
+                case 'charger_pause':
+                case 'charger_end':
+                case 'charger_fault':
+                    value = status.value
             }
             if (value) {
                 if (txtEnable) {
@@ -1791,6 +1800,11 @@ private List<Map> createEvents(DeviceWrapper dw, List<Map> statusList) {
                         LOG.info "${dw} color mode is EFFECTS"
                     }
                     return [[name: 'colorMode', value: 'EFFECTS', descriptionText: 'color mode is EFFECTS']]
+                case 'charge_now':
+                case 'charge_pct':
+                case 'charge_energy':
+                case 'charge_schedule':
+                    return [[name: 'workMode', value: status.value, descriptionText: 'Working mode is ' + status.Value]]
             }
         }
 
