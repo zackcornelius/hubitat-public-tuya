@@ -171,7 +171,9 @@ metadata {
         'nightvisionMode': ['nightvision_mode'],
         'omniSensor'     : ['bright_value', 'humidity_value', 'va_humidity', 'bright_sensitivity', 'shock_state', 'inactive_state', 'sensitivity'],
         'pir'            : ['pir'],
-        'power'          : ['Power', 'power', 'power_go', 'switch', 'switch_1', 'switch_2', 'switch_3', 'switch_4', 'switch_5', 'switch_6', 'switch_usb1', 'switch_usb2', 'switch_usb3', 'switch_usb4', 'switch_usb5', 'switch_usb6', 'alarm_switch', 'start', 'power_total'],
+        'power'          : ['Power', 'power', 'power_go', 'switch', 'switch_1', 'switch_2', 'switch_3', 'switch_4', 'switch_5', 'switch_6', 'switch_usb1', 'switch_usb2', 'switch_usb3', 'switch_usb4', 'switch_usb5', 'switch_usb6', 'alarm_switch', 'start'],
+        'powerMeter'    : ['power_total'],
+        'energyMeter'   : ['forward_energy_total'],
         'percentControl' : ['percent_control', 'fan_speed_percent', 'position'],
         'push'           : ['manual_feed'],
         'recordSwitch'   : ['record_switch'],
@@ -323,7 +325,7 @@ private static Map mapTuyaCategory(Map d) {
             }
             return [devices: switches]
         case 'qccdz': // Automotive charger
-            return [driver: 'Generic Component Automotive Charger']
+            return [namespace: 'component', driver: 'Generic Component Automotive Charger']
 
             // Security & Sensors
         case 'ms':    // Lock
@@ -1580,6 +1582,22 @@ private List<Map> createEvents(DeviceWrapper dw, List<Map> statusList) {
                 LOG.info "${dw} switch is ${value}"
             }
             return [[name: 'switch', value: value, descriptionText: "switch is ${value}", statusCode: status.code]]
+        }
+
+        if (status.code in tuyaFunctions.powerMeter) {
+            Map code = deviceStatusSet[status.code] ?: defaults[status.code]
+            String name = 'power'
+            String unit = 'kW'
+            value = status.value
+            return [[name: name, value: value, descriptionText: "${dw} ${name} is ${value} ${unit}", unit: unit]]
+        }
+
+        if (status.code in tuyaFunctions.energyMeter) {
+            Map code = deviceStatusSet[status.code] ?: defaults[status.code]
+            String name = 'energy'
+            String unit = 'kWh'
+            value = status.value
+            return [[name: name, value: value, descriptionText: "${dw} ${name} is ${value} ${unit}", unit: unit]]
         }
 
         if (status.code in tuyaFunctions.meteringSwitch) {
